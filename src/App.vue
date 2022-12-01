@@ -1,5 +1,26 @@
 <style scoped>
-.list_button {
+.search_box {
+  width: clamp(200px, 70vw, 660px);
+  height: 36px;
+  background-color: #070707;
+  border: 0px;
+  border-bottom: 1px solid #8f8f8f;
+  padding-left: 26px;
+  color: #fff;
+}
+
+input::placeholder {
+  font-family: Montserrat;
+  font-size: 14px;
+  color: #fff;
+}
+
+textarea:focus,
+input:focus {
+  outline: none;
+}
+
+/* .list_button {
   display: grid;
   grid-template-columns: 1fr 1fr;
   margin: 30px 21px 0px 20px;
@@ -27,8 +48,129 @@
   font-size: 18px;
   font-weight: 300;
   margin-left: 31px;
+} */
+iframe {
+  width: 100%;
 }
 
+.iframe-container {
+  display: flex;
+  width: 100%;
+}
+
+.overlay {
+  position: fixed;
+  overflow-y: auto;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  background-color: black;
+  opacity: 7%;
+  z-index: 20;
+}
+
+.modal {
+  position: fixed;
+  top: 0px;
+  left: 50%;
+  transform: translate(-50%);
+  background-color: #FFF;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  width: 75%;
+}
+
+.info-container {
+  margin: 40px 60px 0px 60px;
+}
+
+.info {
+  width: clamp(100%, 50%, 50%);
+  display: grid;
+  grid-template-columns: 1fr 8fr;
+  color: #070707;
+  font-family: Montserrat;
+  font-size: 15.5px;
+  font-weight: 300;
+}
+
+.info .item1 {
+  grid-column-start: 1;
+  grid-column-end: 3;
+  font-family: Montserrat;
+  font-size: 30px;
+  font-weight: 500;
+}
+
+.info .item3 {
+  color: #8c8c8c;
+}
+
+.genre-container {
+  display: flex;
+}
+
+.genre {
+  width: 142px;
+  height: 40px;
+  border: solid 1px var(--black-three);
+  background-color: #070707;
+  color: #FFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 5px 0px 0px;
+}
+
+.modal iframe {
+  border: none;
+  width: 1fr;
+  height: 30vw;
+  margin: 0px 60px;
+}
+
+.summary {
+  font-size: 14px;
+  font-family: Montserrat;
+  padding: 40px clamp(20px, 5vw, 60px) 100px clamp(20px, 5vw, 60px);
+}
+
+.modal img {
+  width: 80%;
+  margin: 0px auto 70px auto;
+}
+
+.button {
+  position: fixed;
+  z-index: 20;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  outline: none;
+  color: #FFF;
+}
+
+.button.close {
+  top: 20px;
+  right: 20px;
+  font-size: 18px;
+}
+
+.button.next {
+  top: 50%;
+  right: 5%;
+  font-size: clamp(10px, 5vw, 74px);
+}
+
+.button.prev {
+  top: 50%;
+  left: 5%;
+  font-size: clamp(10px, 5vw, 74px);
+}
 
 .movie-list {
   display: grid;
@@ -79,13 +221,13 @@
 
 
 
-.nav-button {
+/* .nav-button {
   display: flex;
   justify-content: center;
-}
+} */
 
 /* CSS */
-.button-12 {
+/* .button-12 {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -101,7 +243,7 @@
 
 .red {
   background-color: #ff2e43;
-}
+} */
 
 .carousel__item {
   color: white;
@@ -150,49 +292,18 @@
 <script>
 /*eslint-disable */
 import axios from 'axios';
-import { ref } from 'vue'
-import AppHeader from "@/components/AppHeader.vue";
+// import { ref } from 'vue'
 import { Carousel, Navigation, Slide } from 'vue3-carousel'
 import 'vue3-carousel/dist/carousel.css'
-const isModalOpen = ref(false);
-// useEffect(() => {
-//     axios(`https://yts.torrentbay.to/api/v2/list_movies.json?limit=30&&query_term=${searchTerm}&&genre=${genre}&&sort_by=${sortBy}&&page=${page}`).then(res => {
-//       const result = res.data.data;
-//       console.log(result);
-//       setmovies(result.movies);
-//       setPageCount(Math.floor(result.movie_count / result.limit) + 1);
-//       console.log(pageCount);
-//     })
-//   }, [page, sortBy, searchTerm, genre, isOpen]);
+// import { is } from '@babel/types';
+// const isModalOpen = ref(false);
+// let input = ref("");
 
-// const movieList = {
-//   movies: [],
-//   created() {
-//     const fetchData = async () => {
-//       const movies = await axios.get('https://yts.torrentbay.to/api/v2/list_movies.json?limit=1');
-
-//       this.movies = movies;
-//       console.log(movieList.movies);
-//     };
-
-//     fetchData();
-// },
-// }
-
-//   const url = `https://yts.torrentbay.to/api/v2/list_movies.json?limit=1`
-//   fetch(url)
-// 		.then(res => res.json())
-// 		.then(data => {
-// 			movies.value = data.data.movies;
-//       console.log(data);
-// 		})
-// }
 export default ({
   components: {
     Carousel,
     Slide,
     Navigation,
-    AppHeader,
   },
   data: () => ({
     Gernes: [
@@ -219,7 +330,12 @@ export default ({
       { name: 'Western' },
     ],
     movies: '',
+    isClicked: false,
+    focus: '',
+    input: '',
+    gerne: 'all',
   }),
+
   methods: {
     async api() {
       let config = {
@@ -227,11 +343,28 @@ export default ({
           'Accept': 'application/json'
         }
       }
-      const result = await axios.get('https://yts.torrentbay.to/api/v2/list_movies.json?limit=30', config);
+      const url = "https://yts.torrentbay.to/api/v2/list_movies.json?limit=30&&query_term=" + this.input.toLowerCase() +"&&genre=" + this.gerne.toLowerCase();
+      const result = await axios.get(url, config);
 
 
       console.log(this.movies = result.data.data.movies);
-    }
+    },
+    focusGerne(item) {
+      this.gerne = item;
+      this.api();
+    },
+    toggleClick(item) {
+      this.isClicked = !this.isClicked;
+      console.log(this.focus = item);
+    },
+    nextFocus(prev) {
+      this.isClicked = !this.isClicked;
+      this.toggleClick(prev < 29 ? prev + 1 : 0);
+    },
+    prevFocus(prev) {
+      this.isClicked = !this.isClicked;
+      this.toggleClick(prev > 0 ? prev - 1 : 29);
+    },
 
   },
   mounted() {
@@ -241,11 +374,16 @@ export default ({
 </script>
 <template>
 
-  <AppHeader />
+  <nav class="d-flex justify-content-center align-items-center bg-black mb-2" style="height: 60px;">
+    <div>
+      <input type="text" class="search_box" placeholder="Search for movie......"  v-model="input" @keyup.enter="api()"/>
+    </div>
+
+  </nav>
   <div>
     <Carousel :items-to-show="9" :wrap-around="true" class="mb-2">
       <Slide v-for="gerne in Gernes" :key="gerne.name">
-        <div class="carousel__item">{{ gerne.name }}</div>
+        <div class="carousel__item" @click="focusGerne(gerne.name)">{{ gerne.name }}</div>
       </Slide>
 
       <template #addons>
@@ -254,10 +392,9 @@ export default ({
     </Carousel>
 
     <div class="movie-list">
-      <div v-for="movie in movies" class='movie-container'>
+      <div v-for="movie in movies" class='movie-container' @click="toggleClick(movies.indexOf(movie))">
         <div class='image-container' :id="movie.id">
-          <img class='movie-background-image' :src="movie.background_image" :alt="movie.title + 'background image'"
-            @click="isModalOpen = true" />
+          <img class='movie-background-image' :src="movie.background_image" :alt="movie.title + 'background image'" />
         </div>
 
         <div class='detail'>
@@ -267,51 +404,42 @@ export default ({
                   movie.runtime % 60 + 'm'
               }}</span>
         </div>
-        <Teleport to="#modal" :data="movie">
-
-          <div className='modal' v-if="isModalOpen">
-            <div className='info-container'>
-              <div className='info'>
-                <div className='movie1 Text-Style-19'>{{ movie.title }}</div>
-                <div className='movie2'>{{ movie.year }}</div>
-                <div className='movie3'>{{ movie.rating + "/10 - " + Math.floor(movie.runtime / 60) + "h" +
-                    movie.runtime % 60 + 'm'
+        <Teleport to="#modal">
+          <div class='overlay' @click="toggleClick()" v-if="isClicked" />
+          <div class='modal' v-if="isClicked">
+            <div class='info-container'>
+              <div class='info'>
+                <div class='movie1 Text-Style-19'>{{ movies[focus].title }}</div>
+                <div class='movie2'>{{ movies[focus].year }}</div>
+                <div class='movie3'>{{ movies[focus].rating + "/10 - " + Math.floor(movies[focus].runtime / 60) + "h" +
+                    movies[focus].runtime % 60 + 'm'
                 }}</div>
               </div>
 
-              <div className='genre-container'>
 
-                <div v-for="gerne in movie.gernes" class="gerne">{{ gerne }}</div>
-              </div>
 
             </div>
 
-            <div className='horizontal-rule'></div>
+            <img alt="large_cover" :src="movies[focus].large_cover_image" />
 
-            <img v-if="!movie.yt_trailer_code" alt="large_cover" :src="movie.large_cover_image" />
-            <div v-if="movie.yt_trailer_code">
-              <iframe :src="'https://www.youtube.com/embed/' + movie.yt_trailer_code"></iframe>
-            </div>
-
-
-            <div className='summary'>
-              {{ movie.summary }}
+            <div class='summary'>
+              {{ focus.summary }}
             </div>
 
             <img alt='cover_1' :src="'https://yts.torrentbay.to/assets/images/movies/' +
-            movie.slug.toLowerCase().split('-').join('_') + '/medium-screenshot1.jpg'" />
+            movies[focus].slug.toLowerCase().split('-').join('_') + '/medium-screenshot1.jpg'" />
 
             <img alt='cover_1' :src="'https://yts.torrentbay.to/assets/images/movies/' +
-            movie.slug.toLowerCase().split('-').join('_') + '/medium-screenshot2.jpg'" />
+            movies[focus].slug.toLowerCase().split('-').join('_') + '/medium-screenshot2.jpg'" />
 
             <img alt='cover_1' :src="'https://yts.torrentbay.to/assets/images/movies/' +
-            movie.slug.toLowerCase().split('-').join('_') + '/medium-screenshot3.jpg'" />
+            movies[focus].slug.toLowerCase().split('-').join('_') + '/medium-screenshot3.jpg'" />
 
 
           </div>
-          <button className='button close' onClick={onClose}>X</button>
-          <button className='button next' onClick={nextMovie}>ᐳ</button>
-          <button className='button prev' onClick={prevMovie}>ᐸ</button>
+          <button class='button close' @click="toggleClick()">X</button>
+          <button class='button next' @click="nextFocus(focus)">ᐳ</button>
+          <button class='button prev' @click="prevFocus(focus)">ᐸ</button>
         </Teleport>
       </div>
     </div>
