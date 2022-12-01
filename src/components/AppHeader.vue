@@ -1,5 +1,5 @@
 <template>
-  <nav class="d-flex justify-content-center align-items-center bg-black" style="height: 60px;">
+  <nav class="d-flex justify-content-center align-items-center bg-black mb-2" style="height: 60px;">
       <!-- <div class="w-70 bg-dark pl-26 border border-0"> -->
         <InputSearch v-model="searchText" />
 

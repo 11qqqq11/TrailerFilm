@@ -16,7 +16,7 @@ export default {
 };
 </script>
 <template>
-  <div class="w-70">
+  <div>
     <input
       type="text"
       class="search_box"
